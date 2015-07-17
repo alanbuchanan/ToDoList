@@ -1,0 +1,84 @@
+<html>
+<head>
+	<script src="angular.min.js"></script>
+	<title>jwief</title>
+	<link href='http://fonts.googleapis.com/css?family=Raleway:300' rel='stylesheet' type='text/css'>
+	<style>
+	* 					{font-family: 'Raleway', sans-serif;}
+	button 			{border-radius: 20px;}
+	</style>
+</head>
+<body ng-app="ToDo" ng-controller="MainCtrl">
+	<h1>To Do List</h1>
+	<form novalidate ng-submit="save()">
+		<div>
+			<input type="text" ng-model="str" placeholder="Enter here">
+			<button name="Save" ng-disabled="validated(str)">Save
+			</button>
+		</div>
+	</form>
+	<ol> 
+		<li ng-repeat="entry in entries">
+
+			<div ng-show="ifDefault">
+				{{entry.name | uppercase}}
+			</div>
+
+			<div ng-show="ifEdit">
+				<input type="text" value="{{entry.name}}">
+			</div> <!-- 
+			TODO: Save button in edit mode
+						Mouseover delete instead of delete for each 
+						Dropdown for order of things
+						Delete selected with checkboxes
+
+						-->
+			<div ng-show="ifEdit">
+			<button ng-click="delete(entry)">Delete</button>
+			<button ng-click="update(entry)">Save</button>
+		</div>
+	</li>
+</ol>
+<button ng-click="edit(entry)" name="Edit">Edit List</button>
+<script>
+var app = angular.module('ToDo', []);
+app.controller('MainCtrl', function($scope){
+	$scope.ifDefault = true;
+	$scope.ifEdit = false;
+
+	$scope.entries 	= [{ name: 'Take out rubbish'}, {name: 'Clean kitchen'}, {name: 'Hoover'}];
+	$scope.str 		= '';
+
+	$scope.save 	= function(){ 
+		var entryToSave = {name: $scope.str};
+		$scope.entries.push(entryToSave); 
+		$scope.str 		= '';
+	};
+	$scope.delete 	= function(item){
+		var index = $scope.entries.indexOf(item);
+		$scope.entries.splice(index, 1);
+		console.log($scope.entries);
+	};
+	$scope.edit 	= function(item){
+		var index = $scope.entries.indexOf(item);
+		console.log($scope.entries);
+		$scope.ifEdit = !$scope.ifEdit;
+		$scope.ifDefault = !$scope.ifDefault;
+	};
+	$scope.update 	= function(item){ 
+		var index = $scope.entries.indexOf(item);
+		$scope.entries[index].name = item.name;
+
+		//var entryToSave = {name: $scope.str};
+		//$scope.entries.push(entryToSave); 
+		//$scope.str 		= '';
+	};
+
+
+	$scope.validated = function(str){
+		return str.length === 0;
+	};
+});
+</script>
+</body>
+</html>
