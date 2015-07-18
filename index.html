@@ -20,16 +20,16 @@
 	</form>
 	<ol> 
 		<li ng-repeat="entry in entries">
-
 			<span ng-show="$index !== editedValue">
 				{{entry.name | uppercase}} 
 			</span>
 
 			<span ng-show="$index === editedValue">
-				<input type="text" value="{{entry.name}}">
+				<input type="text" value="{{entry.name}}"  ng-model="updatedValue">
 
 			</span> <!-- 
-			TODO: Save button in edit mode
+			TODO: Get value of string in inout box - line 28
+						Save button in edit mode
 						Mouseover delete instead of delete for each 
 						Dropdown for order of things
 						Delete selected with checkboxes
@@ -37,57 +37,60 @@
 					-->
 					<span>
 						<button ng-click="delete(entry)">Delete</button>
-						<button ng-click="update(entry)">Save</button>
+						<button ng-click="update(updatedValue)">Save</button>
 						<button ng-click="edit(entry)">Edit</button>
 					</span>
 				</li>
 			</ol>
 			<script>
-			var app = angular.module('ToDo', []);
-			app.controller('MainCtrl', function($scope){
-				$scope.ifDefault = true;
-				$scope.ifEdit = false;
+				var app = angular.module('ToDo', []);
+				app.controller('MainCtrl', function($scope){
+					$scope.ifDefault = true;
+					$scope.ifEdit = false;
+					//$scope.updatedValue = 1;
 
-				$scope.entries 	= [{ name: 'Take out rubbish'}, {name: 'Clean kitchen'}, {name: 'Hoover'}];
-				$scope.str 		= '';
-				$scope.editedValue = null;
-
-				$scope.save 	= function(){ 
-					var entryToSave = {name: $scope.str};
-					$scope.entries.push(entryToSave); 
+					$scope.entries 	= [{ name: 'Take out rubbish'}, {name: 'Clean kitchen'}, {name: 'Hoover'}];
 					$scope.str 		= '';
-				};
-				$scope.delete 	= function(item){
-					var index = $scope.entries.indexOf(item);
-					$scope.entries.splice(index, 1);
-					console.log($scope.entries);
-				};
+					$scope.editedValue;
 
-				$scope.edit 	= function(item){
-					var index = $scope.entries.indexOf(item);
-					console.log(index);
-		//console.log($scope.entries[index].name);
-		$scope.editedValue = index;
+					$scope.save 	= function(){ 
+						var entryToSave = {name: $scope.str};
+						$scope.entries.push(entryToSave); 
+						$scope.str 		= '';
+					};
+					$scope.delete 	= function(item){
+						var index = $scope.entries.indexOf(item);
+						$scope.entries.splice(index, 1);
+						console.log($scope.entries);
+					};
 
-		//$scope.entries[index].name = item.name;
-		
-		//$scope.ifEdit = !$scope.ifEdit;
-		//$scope.ifDefault = !$scope.ifDefault;
-	};
-	$scope.update 	= function(item){ 
-		var index = $scope.entries.indexOf(item);
-		$scope.entries[index].name = item.name;
+					$scope.edit 	= function(item){
+						var index = $scope.entries.indexOf(item);
+						console.log(index);
+						//console.log($scope.entries[index].name);
+						$scope.editedValue = index;
 
-		//var entryToSave = {name: $scope.str};
-		//$scope.entries.push(entryToSave); 
-		//$scope.str 		= '';
-	};
+						//$scope.entries[index].name = item.name;
+						
+						//$scope.ifEdit = !$scope.ifEdit;
+						//$scope.ifDefault = !$scope.ifDefault;
+					};
+
+					$scope.update = function(updatedValue){
+						$scope.entries[$scope.editedValue].name = updatedValue;
+						
+						//Go back into normal state from edit state
+						$scope.editedValue = null;
+					};
 
 
-	$scope.validated = function(str){
-		return str.length === 0;
-	};
-});
-</script>
-</body>
+
+
+					$scope.validated = function(str){
+						return str.length === 0;
+					};
+				});
+		</script>
+	</body>
 </html>
+
